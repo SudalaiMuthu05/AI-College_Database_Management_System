@@ -17,4 +17,4 @@ CampusBuddy is designed as a research-inspired AI database agent that bridges na
 🔐 Secure SQL validation layer
 
 # 📸 Screenshots (ChatBot UI)
-![image_alt]('https://github.com/SudalaiMuthu05/AI-College_Database_Management_System/blob/9d44097db689d7e344c4a9a6181e49f88be49b1f/Screenshot%20(337).png')
+![image_alt](https://github.com/SudalaiMuthu05/AI-College_Database_Management_System/blob/9d44097db689d7e344c4a9a6181e49f88be49b1f/Screenshot%20(337).png)

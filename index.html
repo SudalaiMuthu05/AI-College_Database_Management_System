@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CampusBuddy</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #0c1022, #1f2a63, #2a1f63, #0c1022);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animated background */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.chat-container {
+    width: 520px;
+    height: 720px;
+    backdrop-filter: blur(20px);
+    background: rgba(20, 25, 55, 0.6);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 60px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+/* Header */
+.chat-header {
+    padding: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.chat-header h2 {
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    animation: glow 3s ease-in-out infinite alternate;
+}
+
+.chat-header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* Glow animation */
+@keyframes glow {
+    from { text-shadow: 0 0 5px rgba(124,58,237,0.4); }
+    to { text-shadow: 0 0 15px rgba(124,58,237,0.9); }
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    color: white;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+}
+
+.welcome {
+    text-align: center;
+    margin-top: 160px;
+    opacity: 0.6;
+    transition: 0.5s ease;
+}
+
+/* Messages */
+.message {
+    margin-bottom: 15px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    max-width: 80%;
+    font-size: 14px;
+    line-height: 1.6;
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.user {
+    background: linear-gradient(90deg, #3b82f6, #7c3aed);
+    margin-left: auto;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+}
+
+.bot {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+}
+
+/* Result Cards */
+.result-card {
+    background: rgba(255,255,255,0.04);
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 12px;
+    font-size: 13px;
+    border-left: 3px solid #7c3aed;
+    transition: 0.3s ease;
+}
+
+.result-card:hover {
+    transform: scale(1.02);
+    background: rgba(255,255,255,0.08);
+}
+
+/* Input */
+.chat-input {
+    padding: 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.06);
+    color: white;
+    transition: 0.3s ease;
+}
+
+.chat-input input:focus {
+    background: rgba(255,255,255,0.1);
+}
+
+.chat-input button {
+    margin-left: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(90deg, #3b82f6, #7c3aed);
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+.chat-input button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(124,58,237,0.6);
+}
+
+/* Typing animation */
+.typing-bubble {
+    display: flex;
+    gap: 6px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-header">
+        <h2>CampusBuddy</h2>
+        <p>Connecting the campus</p>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="welcome" id="welcomeText">
+            Ask anything about your campus data
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="userInput"
+               placeholder="Ask about students, courses, fees..."
+               onkeypress="if(event.key==='Enter') sendMessage()" />
+        <button onclick="sendMessage()">➤</button>
+    </div>
+
+</div>
+
+<script>
+
+let firstMessage = true;
+
+async function sendMessage(){
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if(!message) return;
+
+    if(firstMessage){
+        document.getElementById("welcomeText").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("welcomeText").remove();
+        }, 500);
+        firstMessage = false;
+    }
+
+    addMessage(message,"user");
+    input.value="";
+
+    const typingElement = showTypingBubble();
+
+    try{
+        const response = await fetch("http://127.0.0.1:5000/chat",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({message:message})
+        });
+
+        const data = await response.json();
+        typingElement.remove();
+
+        if(data.error){
+            addMessage("❌ "+data.error,"bot");
+        }else{
+            formatBotResponse(data);
+        }
+
+    }catch(e){
+        typingElement.remove();
+        addMessage("⚠ Cannot connect to Flask server","bot");
+    }
+}
+
+function addMessage(text,type){
+    const chat = document.getElementById("chatMessages");
+    const msg = document.createElement("div");
+    msg.className="message "+type;
+    msg.innerText=text;
+    chat.appendChild(msg);
+    chat.scrollTop=chat.scrollHeight;
+    return msg;
+}
+
+function showTypingBubble(){
+    const chat = document.getElementById("chatMessages");
+
+    const bubble = document.createElement("div");
+    bubble.className="message bot";
+
+    bubble.innerHTML = `
+        <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    `;
+
+    chat.appendChild(bubble);
+    chat.scrollTop=chat.scrollHeight;
+
+    return bubble;
+}
+
+function formatBotResponse(data){
+    const chat=document.getElementById("chatMessages");
+    const msg=document.createElement("div");
+    msg.className="message bot";
+
+    if(data.result && data.result.length>0){
+        msg.innerHTML=`<strong>Found ${data.row_count} result(s)</strong>`;
+        data.result.forEach(row=>{
+            const card=document.createElement("div");
+            card.className="result-card";
+            let content="";
+            for(let key in row){
+                content+=`<div><strong>${key}:</strong> ${row[key]}</div>`;
+            }
+            card.innerHTML=content;
+            msg.appendChild(card);
+        });
+    }else{
+        msg.innerHTML="⚠ No results found.";
+    }
+
+    chat.appendChild(msg);
+    chat.scrollTop=chat.scrollHeight;
+}
+
+</script>
+
+</body>
+</html>

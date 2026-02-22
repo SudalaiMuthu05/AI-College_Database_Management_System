@@ -9,8 +9,7 @@ CampusBuddy is a locally powered AI-driven SQL assistant that allows users to qu
 
 CampusBuddy is designed as a research-inspired AI database agent that bridges natural language understanding and structured data retrieval.
 
-#### The system uses:
-
+## The system uses:
 🧠 Local Large Language Model (Ollama + Mistral)
 🐘 PostgreSQL database (200,000+ records)
 ⚙️ Flask backend

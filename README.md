@@ -15,3 +15,6 @@ CampusBuddy is designed as a research-inspired AI database agent that bridges na
 ⚙️ Flask backend
 🎨 Modern animated UI
 🔐 Secure SQL validation layer
+
+# 📸 Screenshots (ChatBot UI)
+![image_alt](<img width="1920" height="1020" alt="Screenshot (337)" src="https://github.com/user-attachments/assets/c199ece4-9bf1-47b9-8e0c-8d1c3f132cf0" />)
